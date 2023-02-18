@@ -1,0 +1,219 @@
+<template>
+  <b-container fluid class="page-min-height py-3">
+    <UiPageTitle title="카카오 알림 관리" :breadcrumb="breadcrumb">
+      <template #buttons>
+        <b-button variant="primary" to="/manager/inner-admin/add">
+          등록
+        </b-button>
+      </template>
+    </UiPageTitle>
+    <hr>
+    <!--필터-->
+    <b-container fluid class="px-0" tag="form" @submit.prevent="totalInnerList">
+      <b-row class="px-3">
+        <b-col lg="12" class="mb-2">
+          <b-form-group
+            label="검색"
+            label-cols-sm="2"
+            label-align-sm="left"
+            label-size="sm"
+            class="align-items-center"
+          >
+            <div class="d-flex">
+              <b-form-select
+                v-model="filter.search"
+                :options="searchOptions"
+                class="w-15"
+              />
+              <b-form-input v-model="searchValue" class="ml-2 w-25" />
+            </div>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <hr class="my-2">
+      <b-row align-h="center" class="mb-4">
+        <b-col cols="2">
+          <b-button variant="primary" class="w-75">
+            검색
+          </b-button>
+        </b-col>
+      </b-row>
+    </b-container>
+    <b-row class="pt-5">
+      <b-col align-self="center">
+        <h6>카카오 알림 목록 ({{ totalRows ? totalRows : '0' }})</h6>
+      </b-col>
+      <b-col cols="auto" align-self="center" class="w-10">
+        <b-form-select v-model="sort" :options="sortOptions" />
+      </b-col>
+    </b-row>
+    <hr class="my-2">
+
+    <!-- 테이블 -->
+    <b-table
+      class="list"
+      :items="items"
+      :fields="fields"
+      stacked="md"
+      :busy="isLoading"
+      show-empty
+      small
+    >
+      <template #empty>
+        <h4 class="mt-4">
+          조회 가능한 데이터가 없습니다.
+        </h4>
+      </template>
+      <template #table-busy>
+        <div class="text-center text-danger my-4">
+          <b-spinner variant="primary" class="align-middle" />
+          <span class="ml-3">데이터를 불러오고 있습니다.</span>
+        </div>
+      </template>
+      <template #cell(no)="data">
+        {{ totalRows - (currentPage - 1) * perPage - (data.index + 1) + 1 }}
+      </template>
+      <template #cell(email)="data">
+        <NuxtLink :to="`/manager/inner-admin/${data.item.id}/edit`">
+          {{ data.value }}
+        </NuxtLink>
+      </template>
+    </b-table>
+
+    <UiPagination
+      class="py-4"
+      :page="currentPage"
+      :per-page="perPage"
+      :total-rows="totalRows"
+      @change-page="currentPage = $event"
+    />
+  </b-container>
+</template>
+
+<script>
+export default {
+  name: 'ManagerInnerListPage',
+
+  data () {
+    return {
+      searchValue: '',
+      sort: '최신순',
+      sortOptions: [{ text: '최신순', value: '최신순' }],
+      filter: {
+        search: '선택',
+        type: [],
+        status: [],
+        dateSearch: 1
+      },
+      currentSettingId: '',
+      selectedPerPage: 100,
+      searchOptions: [
+        { text: '선택', value: '선택' },
+        { text: '아이디', value: '아이디' },
+        { text: '계정명', value: '계정명' },
+        { text: '소속', value: '소속' }
+      ],
+      isLoading: false,
+      totalRows: 0,
+      currentPage: 1,
+      perPage: 5,
+      items: [
+        // {
+        //   id: 3,
+        //   email: 'acdd@gmail.com',
+        //   account: '홍길동',
+        //   position: '디지털 사업팀',
+        //   powerGroup: '권한그룹1',
+        //   accountActive: '활성화',
+        //   recentLogin: '2018.10.29'
+        // },
+        // {
+        //   id: 3,
+        //   email: 'acdd@gmail.com',
+        //   account: '홍길동',
+        //   position: '디지털 사업팀',
+        //   powerGroup: '권한그룹1',
+        //   accountActive: '활성화',
+        //   recentLogin: '2018.10.29'
+        // },
+        // {
+        //   id: 3,
+        //   email: 'acdd@gmail.com',
+        //   account: '홍길동',
+        //   position: '디지털 사업팀',
+        //   powerGroup: '권한그룹1',
+        //   accountActive: '활성화',
+        //   recentLogin: '2018.10.29'
+        // }
+      ],
+      fields: [
+        { key: 'no', label: '번호' },
+        { key: 'email', label: '아이디' },
+        { key: 'name', label: '계정명' },
+        { key: 'part', label: '소속부서' },
+        { key: 'password', label: '비밀번호' },
+        { key: 'role', label: '권한그룹' },
+        { key: 'activeYn', label: '계정 활성화' },
+        { key: 'lastLoginDt', label: '최신 로그인' }
+      ],
+      filterSort: [],
+      filterAdult: []
+    }
+  },
+  async fetch () {
+    await this.totalInnerList()
+    console.log(this.currentPage, this.perPage, this.totalRows, '------------')
+  },
+  computed: {
+    breadcrumb () {
+      const arr = [
+        { label: '홈', url: '/' },
+        { label: '관리자 관리', url: '#' },
+        { label: '카카오 알림 관리', url: this.$route.path }
+      ]
+      return arr
+    }
+  },
+  watch: {
+    async currentPage () {
+      await this.totalInnerList()
+    }
+  },
+  mounted () {},
+  methods: {
+    async totalInnerList () {
+      this.isLoading = true
+      try {
+        const {
+          data: { data }
+        } = await this.$axios.get('/api/manager/admin/list', {
+          params: {
+            publisherName: this.searchValue,
+            pageNum: this.currentPage,
+            pageSize: this.perPage
+          }
+        })
+        this.items = data.list
+        this.totalRows = data.total
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.isLoading = false
+      }
+    },
+    openSetting (id) {
+      this.disabledTooltip = !this.disabledTooltip
+
+      if (this.disabledTooltip) {
+        this.$refs[`setting-${id}`].$emit('open')
+      } else {
+        this.$refs[`setting-${id}`].$emit('close')
+      }
+
+      this.$root.$on('bv::tooltip::shown', (e) => {
+        this.currentSettingId = e.target.id
+      })
+    }
+  }
+}
+</script>

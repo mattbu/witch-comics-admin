@@ -1,0 +1,30 @@
+.ssr-carousel {
+  position: relative;
+  &-dots {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  &-dot-button {
+    .ssr-carousel-dot-icon {
+      border: none;
+      width: 6px;
+      height: 6px;
+      background-color: var(--white);
+      margin: 0 3px;
+    }
+    &[disabled] {
+      .ssr-carousel-dot-icon {
+        width: 40px;
+        background-color: var(--secondary);
+        transition: width 300ms;
+      }
+    }
+    &:not([disabled]) {
+      .ssr-carousel-dot-icon {
+        opacity: .7;
+      }
+    }
+  }
+}

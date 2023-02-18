@@ -1,0 +1,39 @@
+.markup-page-title{
+  .btn{
+    min-height: 42px;
+    i{
+      line-height: initial;
+    }
+  }
+  .form-group .btn{
+    min-height: auto;
+  }
+}
+.custom-breadcrumb{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: inline-flex;
+  > li {
+    margin-right: 1.5rem;
+    position: relative;
+    a {
+      color: var(--breadcrumb);
+      &.current-link {
+        color: var(--primary);
+      }
+    }
+    &:after {
+      content: '>';
+      position: absolute;
+      right: -1rem;
+    }
+    &:last-child {
+      margin-right: 0;
+      color: var(--primary);
+      &:after {
+        display: none;
+      }
+    }
+  }
+}

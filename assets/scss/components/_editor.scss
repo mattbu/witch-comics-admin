@@ -1,0 +1,83 @@
+
+.toastui {
+  &-editor-defaultUI {
+    border-radius: 8px;
+    border: 1px solid $gray-400!important;
+    &-toolbar {
+      background-color: transparent!important;
+      button {
+        border-radius: 4px!important;
+      }
+    }
+    button {
+      &.toastui-editor-file-select-button {
+        font-weight: 400!important;
+        text-align: center!important;
+        -webkit-user-select: none!important;
+        -moz-user-select: none!important;
+        user-select: none!important;
+        border: 1px solid var(--primary)!important;
+        padding: 0.375rem 0.75rem!important;
+        border-radius: 0.25rem!important;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out!important;
+        background-color: var(--white)!important;
+        color: var(--primary);
+      }
+      &.toastui-editor-ok-button {
+        display: inline-block!important;
+        font-weight: 400!important;
+        text-align: center!important;
+        vertical-align: middle!important;
+        -webkit-user-select: none!important;
+        -moz-user-select: none!important;
+        user-select: none!important;
+        border: 1px solid transparent!important;
+        padding: 0.375rem 0.75rem!important;
+        line-height: 1.5!important;
+        border-radius: 0.25rem!important;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out!important;
+        background-color: var(--primary)!important;
+      }
+
+      &.toastui-editor-close-button {
+        display: inline-block!important;
+        font-weight: 400!important;
+        text-align: center!important;
+        vertical-align: middle!important;
+        -webkit-user-select: none!important;
+        -moz-user-select: none!important;
+        user-select: none!important;
+        border: 1px solid var(--primary)!important;
+        padding: 0.375rem 0.75rem!important;
+        line-height: 1.5!important;
+        border-radius: 0.25rem!important;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out!important;
+        background-color: var(--white)!important;
+        color: var(--primary);
+      }
+    }
+  }
+  &-popup-wrapper {
+    border-radius: 8px;
+  }
+}
+
+
+
+// 기존 컬러 변경
+.toastui-editor-popup-add-table .toastui-editor-table-selection-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid var(--primary)!important;
+  background: rgba(85, 51, 204, 0.1)!important;
+  z-index: 30;
+}
+.toastui-editor-popup-add-image .toastui-editor-tabs .tab-item.active {
+  color: var(--primary) !important;
+  border-bottom: 2px solid var(--primary)!important;
+}
+.toastui-editor-popup-body input[type='text']:focus {
+  outline: 1px solid var(--primary)!important;
+  border-color: transparent;
+}

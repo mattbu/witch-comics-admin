@@ -1,0 +1,80 @@
+#version: "3.7"
+#services:
+#    #PHP Service
+#    robot-control-backend-v1:
+#        image: 'asia.gcr.io/lge-pri-cloud/robot-control-backend-v1:latest'
+#        container_name: robot-control-backend-v1
+#        restart: unless-stopped
+#        tty: true
+#        environment:
+#            SERVICE_NAME: app
+#            SERVICE_TAGS: dev
+#        working_dir: /app
+#        volumes:
+#            - robotstorage:/app/storage/app/public
+#        networks:
+#            - app-network
+#        ports:
+#            - "8080:80"
+#    robot-control-frontend-v1:
+#        image: 'asia.gcr.io/lge-pri-cloud/robot-control-frontend-v1:latest'
+#        container_name: robot-control-frontend-v1
+#        restart: always
+#        ports:
+#            - "80:3000"
+#        environment:
+#            - HOST=0.0.0.0
+#            - PORT=3000
+#        networks:
+#            - app-network
+#    filebrowser:
+#        image: filebrowser/filebrowser
+#        ports:
+#            - "8081:80"
+#        volumes:
+##            - ./docker/filebrowser/filebrowser.db:/database.db
+#            - robotstorage:/srv
+#        restart: unless-stopped
+#        networks:
+#            - app-network
+##Docker Networks
+#networks:
+#    app-network:
+#        driver: bridge
+##Volumes
+#volumes:
+#    robotstorage:
+#        driver_opts:
+#            type: "nfs4"
+#            o: "addr=13.124.161.255,nolock,soft,rw"
+#            device: ":/robotstorage"
+#    dbdata:
+#        driver: local
+version: "3.7"
+services:
+
+    witch-admin:
+        image: 'ghkdeogh/witch-admin:latest'
+        container_name: witch-admin
+        shm_size: '8gb'
+        restart: always
+        ports:
+            - "80:3000"
+        environment:
+            - HOST=0.0.0.0
+        #            - PORT=3000
+        networks:
+            - app-network
+
+networks:
+    app-network:
+        driver: bridge
+    #Volumes
+    #volumes:
+    #    robotstorage:
+    ##        driver_opts:
+    #            type: "nfs4"
+    #            o: "addr=165.244.190.107,rw"
+    #            device: ":/ait_vol/robot_storage"
+    dbdata:
+        driver: local
